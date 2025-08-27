@@ -2,8 +2,6 @@
 
 A powerful, feature-rich digital notepad and whiteboard application with AI integration. Perfect for note-taking, sketching, calculations, and productivity enhancement.
 
-![Padboard Screenshot](https://via.placeholder.com/800x400/667eea/ffffff?text=Padboard+by+voxpher)
-
 ## ✨ Features
 
 ### 📄 **Smart Note-Taking**
@@ -196,11 +194,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support, questions, or suggestions:
 - Create an issue on GitHub
-- Contact: [your-email@example.com]
-- Website: [your-website.com]
+- Website: voxpherofficial.art.blog
 
 ---
 
 **Made with ❤️ by voxpher**
+
 
 *Turn your ideas into reality with Padboard - the ultimate digital workspace!*
