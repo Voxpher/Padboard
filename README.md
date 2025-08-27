@@ -128,24 +128,6 @@ padboard-by-voxpher/
 - Smooth animations and transitions
 - Mobile-first responsive design
 
-## 🔧 Customization
-
-### Changing Colors
-Edit the CSS variables in `css/style.css`:
-```css
-:root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
-    --accent-color: #ffffff;
-}
-```
-
-### Adding Features
-- Modify `js/app.js` for core functionality
-- Update `js/canvas.js` for drawing features
-- Extend `js/ai-handler.js` for AI capabilities
-- Customize `js/window-manager.js` for window behavior
-
 ## 🔒 Privacy & Security
 
 - **Local First**: All data processed locally in your browser
@@ -194,7 +176,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For support, questions, or suggestions:
 - Create an issue on GitHub
-- Website: voxpherofficial.art.blog
+- Website: www.voxpherofficial.art.blog
 
 ---
 
@@ -202,3 +184,4 @@ For support, questions, or suggestions:
 
 
 *Turn your ideas into reality with Padboard - the ultimate digital workspace!*
+
