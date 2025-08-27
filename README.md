@@ -43,7 +43,7 @@ A powerful, feature-rich digital notepad and whiteboard application with AI inte
 3. **Open**: Simply open `index.html` in your web browser
 
 ### Setup
-1. **Get API Key**: Obtain a Google Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+1. **Get API Key**: Obtain a Google Gemini API key
 2. **Enter Key**: Input your API key in the AI sidebar
 3. **Start Using**: Begin taking notes, sketching, and using AI features!
 
@@ -184,4 +184,5 @@ For support, questions, or suggestions:
 
 
 *Turn your ideas into reality with Padboard - the ultimate digital workspace!*
+
 
