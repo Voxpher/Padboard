@@ -1,0 +1,62 @@
+{
+  "name": "padboard-by-voxpher",
+  "version": "1.0.0",
+  "description": "A powerful digital notepad and whiteboard application with AI integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "npx http-server . -p 8000 -o",
+    "build": "echo 'No build process needed - static files only'",
+    "test": "echo 'No tests specified yet'",
+    "lint": "echo 'Add linting tools as needed'",
+    "deploy": "echo 'Ready for deployment - upload all files to web server'"
+  },
+  "keywords": [
+    "notepad",
+    "whiteboard",
+    "ai",
+    "drawing",
+    "notes",
+    "productivity",
+    "sketch",
+    "gemini",
+    "pdf",
+    "canvas"
+  ],
+  "author": "voxpher",
+  "license": "MIT",
+  "homepage": "https://github.com/voxpher/padboard-by-voxpher",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voxpher/padboard-by-voxpher.git"
+  },
+  "bugs": {
+    "url": "https://github.com/voxpher/padboard-by-voxpher/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "Chrome >= 90",
+    "Firefox >= 88",
+    "Safari >= 14",
+    "Edge >= 90"
+  ],
+  "devDependencies": {},
+  "dependencies": {},
+  "peerDependencies": {},
+  "config": {
+    "port": 8000
+  },
+  "directories": {
+    "lib": "./js",
+    "doc": "./docs"
+  },
+  "files": [
+    "index.html",
+    "css/",
+    "js/",
+    "assets/",
+    "README.md"
+  ]
+}

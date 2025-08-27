@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padboard by voxpher</title>
+    <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #ffffff;
+            --text-color: #333333;
+            --background-color: #f8f9ff;
+            --border-color: #e0e6ed;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .format-group {
+            display: flex;
+            gap: 5px;
+            background: var(--background-color);
+            padding: 5px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .format-btn {
+            padding: 6px 10px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .format-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            color: var(--text-color);
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .notepad-area {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            overflow-y: auto;
+        }
+
+        .page {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .page:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--shadow-color);
+        }
+
+        .page-content {
+            min-height: 400px;
+            padding: 30px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            line-height: 1.6;
+            font-family: inherit;
+            resize: none;
+        }
+
+        .page-content:empty::before {
+            content: attr(placeholder);
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .page-controls {
+            background: var(--background-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .page-number {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .ai-sidebar {
+            width: 350px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-chat {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message {
+            background: var(--background-color);
+            color: var(--text-color);
+            border-bottom-left-radius: 4px;
+        }
+
+        .typing-indicator .typing-dots {
+            display: inline-block;
+        }
+
+        .typing-dots span {
+            animation: typing 1.4s infinite;
+            opacity: 0;
+        }
+
+        .typing-dots span:nth-child(1) { animation-delay: 0s; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0; }
+            30% { opacity: 1; }
+        }
+
+        .ai-input-area {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .ai-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .floating-window {
+            position: fixed;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+            min-width: 400px;
+            max-width: 90vw;
+            max-height: 90vh;
+            flex-direction: column;
+        }
+
+        .window-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px 15px 0 0;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 5px;
+        }
+
+        .window-btn {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .close-btn { background: #ff5f57; }
+        .minimize-btn { background: #ffbd2e; }
+        .maximize-btn { background: #28ca42; }
+
+        .window-content {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* FIX: Resizable Canvas Container */
+        .canvas-container {
+            flex-grow: 1;
+            resize: both;
+            overflow: auto;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            min-width: 300px;
+            min-height: 250px;
+            position: relative;
+        }
+
+        .canvas-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .canvas-btn {
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+
+        .canvas-btn.active,
+        .canvas-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .color-picker,
+        #penSize {
+            margin: 0 5px;
+        }
+
+        .drawing-canvas {
+            cursor: crosshair;
+            background: white;
+            display: block;
+        }
+
+        .resize-handle {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            cursor: se-resize;
+            background: var(--primary-color);
+            border-radius: 15px 0 15px 0;
+            z-index: 1;
+        }
+
+        .minimized-windows {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .minimized-window {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px var(--shadow-color);
+            cursor: pointer;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        /* PDF Export Styles */
+        .pdf-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pdf-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--background-color);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .pdf-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .pdf-option label {
+            flex: 1;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        /* ADD: PDF Viewer Styles */
+        #pdf-viewer-container {
+            flex-grow: 1;
+            overflow: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f0f0f0;
+        }
+        #pdf-viewer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        #pdf-viewer-content canvas {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-width: 100%;
+            height: auto;
+        }
+        .pdf-viewer-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .ai-sidebar {
+                width: 100%;
+                max-height: 300px;
+            }
+
+            .toolbar {
+                gap: 8px;
+            }
+
+            .floating-window {
+                min-width: 90vw;
+                margin: 5%;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-clipboard-list"></i> Padboard
+        </div>
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="saveAsPDF()">
+                <i class="fas fa-file-pdf"></i> Save PDF
+            </button>
+            
+            <!-- ADD: PDF Viewer Button -->
+            <button class="btn btn-secondary" onclick="openPdfViewerWindow()">
+                <i class="fas fa-file-import"></i> View PDF
+            </button>
+
+            <div class="format-group">
+                <button class="format-btn" onclick="formatText('bold')" title="Bold">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="format-btn" onclick="formatText('italic')" title="Italic">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="format-btn" onclick="formatText('underline')" title="Underline">
+                    <i class="fas fa-underline"></i>
+                </button>
+            </div>
+            
+            <select id="fontSize" onchange="changeFontSize()">
+                <option value="14px">14px</option>
+                <option value="16px" selected>16px</option>
+                <option value="18px">18px</option>
+                <option value="20px">20px</option>
+                <option value="24px">24px</option>
+                <option value="28px">28px</option>
+                <option value="32px">32px</option>
+                <option value="36px">36px</option>
+                <option value="40px">40px</option>
+                <option value="44px">44px</option>
+                <option value="48px">48px</option>
+                <option value="52px">52px</option>
+                <option value="56px">56px</option>
+                <option value="60px">60px</option>
+            </select>
+            
+            <select id="fontFamily" onchange="changeFontFamily()">
+                <option value="Poppins">Poppins</option>
+                <option value="Arial">Arial</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Helvetica">Helvetica</option>
+            </select>
+            
+            <select id="fontColor" onchange="changeFontColor()">
+                <option value="black" selected>Black</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="orange">Orange</option>
+                <option value="purple">Purple</option>
+            </select>
+
+            <button class="btn btn-secondary" onclick="insertNumberedList()">
+                <i class="fas fa-list-ol"></i> Numbers
+            </button>
+            
+            <button class="btn btn-secondary" onclick="insertBulletList()">
+                <i class="fas fa-list-ul"></i> Bullets
+            </button>
+            
+            <button class="btn btn-primary" onclick="openDrawingWindow()">
+                <i class="fas fa-pen"></i> Sketch
+            </button>
+
+            <button class="btn btn-primary" onclick="openAIWindow()">
+                <i class="fas fa-robot"></i> AI Analysis
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="notepad-area">
+            <div id="pagesContainer">
+                <div class="page" data-page="1">
+                    <div class="page-content" contenteditable="true" placeholder="Start writing your notes here..."></div>
+                    <div class="page-controls">
+                        <div class="page-number">Page 1</div>
+                        <button class="btn btn-secondary" onclick="removePage(1)" style="display: none;">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addNewPage()" style="margin: 20px auto; display: block;">
+                <i class="fas fa-plus"></i> Add New Page
+            </button>
+        </div>
+
+        <div class="ai-sidebar">
+            <div class="ai-header">
+                <i class="fas fa-robot"></i> AI Assistant (Ready!)
+            </div>
+            <div class="ai-chat" id="aiChat">
+                <div class="message ai-message">
+                    Hi! I'm your AI assistant. I can help with calculations, basic questions, and analysis! No setup required - I'm ready to go! 🚀
+                </div>
+            </div>
+            
+            <div class="ai-input-area">
+                <input type="text" class="ai-input" id="aiInput" placeholder="Ask me anything..." onkeypress="handleAIInput(event)" />
+                <button class="btn btn-primary" onclick="sendAIMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drawing Window -->
+    <div class="floating-window" id="drawingWindow">
+        <div class="window-header" onmousedown="startDrag(event, 'drawingWindow')">
+            <span><i class="fas fa-pen"></i> Sketch & Equations</span>
+            <div class="window-controls">
+                <button class="window-btn minimize-btn" onclick="minimizeWindow('drawingWindow')">−</button>
+                <button class="window-btn maximize-btn" onclick="toggleMaximize('drawingWindow')">▢</button>
+                <button class="window-btn close-btn" onclick="closeWindow('drawingWindow')">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="canvas-toolbar">
+                <button class="canvas-btn active" onclick="setDrawingMode('pen')">
+                    <i class="fas fa-pen"></i> Pen
+                </button>
+                <button class="canvas-btn" onclick="setDrawingMode('eraser')">
+                    <i class="fas fa-eraser"></i> Eraser
+                </button>
+                <button class="canvas-btn" onclick="setDrawingMode('highlighter')">
+                    <i class="fas fa-highlighter"></i> Highlight
+                </button>
+                <input type="color" class="color-picker" id="penColor" value="#000000" onchange="changePenColor()" />
+                <input type="range" id="penSize" min="1" max="20" value="3" onchange="changePenSize()" />
+                <button class="canvas-btn" onclick="undoDrawing()">
+                    <i class="fas fa-undo"></i> Undo
+                </button>
+                <button class="canvas-btn" onclick="redoDrawing()">
+                    <i class="fas fa-redo"></i> Redo
+                </button>
+                <button class="canvas-btn" onclick="clearCanvas()">
+                    <i class="fas fa-trash"></i> Clear
+                </button>
+            </div>
+            <!-- FIX: Resizable Canvas Container -->
+            <div class="canvas-container" id="canvasContainer">
+                <canvas class="drawing-canvas" id="drawingCanvas"></canvas>
+            </div>
+        </div>
+        <div class="resize-handle" onmousedown="startResize(event, 'drawingWindow')"></div>
+    </div>
+
+    <!-- PDF Export Window -->
+    <div class="floating-window" id="pdfWindow">
+        <div class="window-header" onmousedown="startDrag(event, 'pdfWindow')">
+            <span><i class="fas fa-file-pdf"></i> PDF Export Options</span>
+            <div class="window-controls">
+                <button class="window-btn minimize-btn" onclick="minimizeWindow('pdfWindow')">−</button>
+                <button class="window-btn close-btn" onclick="closeWindow('pdfWindow')">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="pdf-options">
+                <h3 style="color: var(--primary-color); margin-bottom: 20px;">
+                    <i class="fas fa-cog"></i> Export Settings
+                </h3>
+                
+                <div class="pdf-option">
+                    <input type="checkbox" id="includeAllPages" checked>
+                    <label for="includeAllPages">
+                        <strong>Include all pages</strong><br>
+                        <small style="color: #666;">Export all your notes pages</small>
+                    </label>
+                </div>
+                
+                <div class="pdf-option">
+                    <input type="checkbox" id="includeHeader" checked>
+                    <label for="includeHeader">
+                        <strong>Add header & date</strong><br>
+                        <small style="color: #666;">Include title and generation date</small>
+                    </label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="generatePDF()" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 16px;">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Analysis Window -->
+    <div class="floating-window" id="aiWindow">
+        <div class="window-header" onmousedown="startDrag(event, 'aiWindow')">
+            <span><i class="fas fa-robot"></i> AI Analysis </span>
+            <div class="window-controls">
+                <button class="window-btn minimize-btn" onclick="minimizeWindow('aiWindow')">−</button>
+                <button class="window-btn maximize-btn" onclick="toggleMaximize('aiWindow')">▢</button>
+                <button class="window-btn close-btn" onclick="closeWindow('aiWindow')">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="ai-chat" id="windowAiChat" style="height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 10px; background: var(--background-color);">
+                <div class="message ai-message">
+                    Advanced AI analysis ready! Ask complex questions, get detailed explanations, or analyze your notes! 🤖✨
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="windowAiInput" placeholder="Ask detailed questions..." style="flex: 1; padding: 12px; border: 2px solid var(--primary-color); border-radius: 10px; font-family: inherit;" onkeypress="handleWindowAIInput(event)" />
+                <button class="btn btn-primary" onclick="sendWindowAIMessage()">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+        </div>
+        <div class="resize-handle" onmousedown="startResize(event, 'aiWindow')"></div>
+    </div>
+
+    <!-- ADD: PDF Viewer Window -->
+    <div class="floating-window" id="pdfViewerWindow">
+        <div class="window-header" onmousedown="startDrag(event, 'pdfViewerWindow')">
+            <span><i class="fas fa-file-import"></i> PDF Viewer</span>
+            <div class="window-controls">
+                <button class="window-btn minimize-btn" onclick="minimizeWindow('pdfViewerWindow')">−</button>
+                <button class="window-btn maximize-btn" onclick="toggleMaximize('pdfViewerWindow')">▢</button>
+                <button class="window-btn close-btn" onclick="closeWindow('pdfViewerWindow')">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div class="pdf-viewer-controls">
+                <input type="file" id="pdf-upload" accept="application/pdf" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('pdf-upload').click()">
+                    <i class="fas fa-upload"></i> Upload PDF
+                </button>
+                <span id="pdf-page-info">No PDF loaded</span>
+            </div>
+            <div id="pdf-viewer-container">
+                <div id="pdf-viewer-content"></div>
+            </div>
+        </div>
+        <div class="resize-handle" onmousedown="startResize(event, 'pdfViewerWindow')"></div>
+    </div>
+
+
+    <!-- Minimized Windows Container -->
+    <div class="minimized-windows" id="minimizedWindows"></div>
+
+    <div class="footer">
+        © 2024 Padboard by voxpher - Your Digital Notepad & Whiteboard | AI-Powered Study Assistant
+    </div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- ADD: html2canvas for styled PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- ADD: PDF.js for PDF viewer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+    
+    <!-- Custom Scripts -->
+    <script>
+        // Drawing variables
+        let canvas, ctx, canvasContainer;
+        let currentDrawingMode = 'pen';
+        let isDrawing = false;
+        let drawingHistory = [];
+        let historyIndex = -1;
+        
+        // Core App Logic
+        let pageCount = 1;
+
+        // Auto-save functionality
+        setInterval(() => {
+            saveToLocalStorage();
+        }, 30000);
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            updatePageNumbers();
+        });
+
+        // Text formatting functions
+        function formatText(command) {
+            document.execCommand(command, false, null);
+            focusEditor();
+        }
+
+        function focusEditor() {
+            const activeElement = document.activeElement;
+            if (activeElement && activeElement.contentEditable === 'true') {
+                activeElement.focus();
+            }
+        }
+
+        function changeFontSize() {
+            const size = document.getElementById('fontSize').value;
+            document.execCommand('fontSize', false, '7');
+            const fontElements = document.querySelectorAll('font[size="7"]');
+            fontElements.forEach(element => {
+                element.removeAttribute('size');
+                element.style.fontSize = size;
+            });
+            focusEditor();
+        }
+
+        function changeFontFamily() {
+            const font = document.getElementById('fontFamily').value;
+            document.execCommand('fontName', false, font);
+            focusEditor();
+        }
+
+        function changeFontColor() {
+            const color = document.getElementById('fontColor').value;
+            document.execCommand('foreColor', false, color);
+            focusEditor();
+        }
+
+        // List functions
+        function insertNumberedList() {
+            document.execCommand('insertOrderedList', false, null);
+            focusEditor();
+        }
+
+        function insertBulletList() {
+            document.execCommand('insertUnorderedList', false, null);
+            focusEditor();
+        }
+
+        // Page management
+        function addNewPage() {
+            pageCount++;
+            const pagesContainer = document.getElementById('pagesContainer');
+            
+            const newPage = document.createElement('div');
+            newPage.className = 'page';
+            newPage.setAttribute('data-page', pageCount);
+            
+            newPage.innerHTML = `
+                <div class="page-content" contenteditable="true" placeholder="Start writing your notes here..."></div>
+                <div class="page-controls">
+                    <div class="page-number">Page ${pageCount}</div>
+                    <button class="btn btn-secondary" onclick="removePage(${pageCount})">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </div>
+            `;
+            
+            pagesContainer.appendChild(newPage);
+            updatePageNumbers();
+            saveToLocalStorage();
+        }
+
+        function removePage(pageNum) {
+            if (pageCount <= 1) {
+                alert('Cannot remove the last page!');
+                return;
+            }
+            
+            const page = document.querySelector(`[data-page="${pageNum}"]`);
+            if (page) {
+                page.remove();
+                pageCount--;
+                updatePageNumbers();
+                saveToLocalStorage();
+            }
+        }
+
+        function updatePageNumbers() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach((page, index) => {
+                const pageNumber = index + 1;
+                page.setAttribute('data-page', pageNumber);
+                const pageNumberElement = page.querySelector('.page-number');
+                if (pageNumberElement) {
+                    pageNumberElement.textContent = `Page ${pageNumber}`;
+                }
+                
+                const removeButton = page.querySelector('button[onclick*="removePage"]');
+                if (removeButton) {
+                    removeButton.setAttribute('onclick', `removePage(${pageNumber})`);
+                    removeButton.style.display = pages.length > 1 ? 'inline-block' : 'none';
+                }
+            });
+            pageCount = pages.length;
+        }
+
+        // PDF Export with Options Dialog
+        function saveAsPDF() {
+            document.getElementById('pdfWindow').style.display = 'flex';
+            centerWindow('pdfWindow');
+        }
+
+        // FIXED PDF GENERATION FUNCTION using html2canvas
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            
+            const includeAllPages = document.getElementById('includeAllPages').checked;
+            const includeHeader = document.getElementById('includeHeader').checked;
+
+            const pagesToExport = includeAllPages 
+                ? Array.from(document.querySelectorAll('.page'))
+                : [document.querySelector('.page')];
+
+            for (let i = 0; i < pagesToExport.length; i++) {
+                const pageElement = pagesToExport[i];
+                const contentElement = pageElement.querySelector('.page-content');
+
+                if (i > 0) {
+                    doc.addPage();
+                }
+
+                let yPosition = 15;
+
+                if (includeHeader) {
+                    doc.setFontSize(18);
+                    doc.setFont("helvetica", "bold");
+                    doc.setTextColor(102, 126, 234);
+                    doc.text('Padboard Notes', 15, yPosition);
+                    yPosition += 8;
+
+                    const currentDate = new Date().toLocaleString();
+                    doc.setFontSize(10);
+                    doc.setFont("helvetica", "normal");
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Page ${i + 1} | Generated on: ${currentDate}`, 15, yPosition);
+                    yPosition += 10;
+                    
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(15, yPosition, 195, yPosition);
+                    yPosition += 5;
+                }
+
+                try {
+                    const canvas = await html2canvas(contentElement, {
+                        scale: 2, // Higher scale for better quality
+                        useCORS: true,
+                        backgroundColor: '#ffffff'
+                    });
+                    const imgData = canvas.toDataURL('image/png');
+                    
+                    const imgProps = doc.getImageProperties(imgData);
+                    const pdfWidth = doc.internal.pageSize.getWidth() - 30; // A4 width in mm with margin
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                    
+                    let heightLeft = pdfHeight;
+                    let position = yPosition;
+
+                    doc.addImage(imgData, 'PNG', 15, position, pdfWidth, pdfHeight);
+                    heightLeft -= (doc.internal.pageSize.getHeight() - position);
+
+                    while (heightLeft >= 0) {
+                        position = heightLeft - pdfHeight;
+                        doc.addPage();
+                        doc.addImage(imgData, 'PNG', 15, position, pdfWidth, pdfHeight);
+                        heightLeft -= doc.internal.pageSize.getHeight();
+                    }
+
+                } catch (error) {
+                    console.error("Error generating PDF with html2canvas:", error);
+                    // Fallback to simple text
+                    doc.text("Could not render styled content.", 15, yPosition);
+                }
+            }
+            
+            const currentDate = new Date().toISOString().slice(0, 10);
+            doc.save(`Padboard_Notes_${currentDate}.pdf`);
+            
+            closeWindow('pdfWindow');
+        }
+
+
+        // FIXED CANVAS FUNCTIONS
+        
+        function initializeCanvas() {
+            canvasContainer = document.getElementById('canvasContainer');
+            canvas = document.getElementById('drawingCanvas');
+            if (!canvas || !canvasContainer) {
+                console.error('Canvas or container not found!');
+                return;
+            }
+            ctx = canvas.getContext('2d');
+            
+            // Set initial canvas size based on container
+            resizeCanvas();
+
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.globalAlpha = 1.0;
+            
+            clearCanvas(false); // Clear without confirmation
+            
+            setupCanvasEventListeners();
+            saveDrawingState();
+            
+            // Add observer to resize canvas when container is resized
+            new ResizeObserver(resizeCanvas).observe(canvasContainer);
+        }
+        
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvasContainer.getBoundingClientRect();
+            
+            // Save current drawing
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            if (canvas.width > 0 && canvas.height > 0) {
+                tempCtx.drawImage(canvas, 0, 0);
+            }
+
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            
+            ctx.scale(dpr, dpr);
+            
+            // Restore drawing
+            if (tempCanvas.width > 0 && tempCanvas.height > 0) {
+                ctx.drawImage(tempCanvas, 0, 0);
+            }
+            
+            // Re-apply styles
+            applyDrawingMode();
+        }
+
+
+        function setupCanvasEventListeners() {
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+            canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const coords = getCanvasCoordinates(e);
+            
+            ctx.beginPath();
+            ctx.moveTo(coords.x, coords.y);
+            
+            applyDrawingMode();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const coords = getCanvasCoordinates(e);
+            ctx.lineTo(coords.x, coords.y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                ctx.beginPath();
+                saveDrawingState();
+            }
+        }
+
+        function getCanvasCoordinates(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / (rect.width * (window.devicePixelRatio || 1));
+            const scaleY = canvas.height / (rect.height * (window.devicePixelRatio || 1));
+            
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            startDrawing(e);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            draw(e);
+        }
+
+        function handleTouchEnd(e) {
+            e.preventDefault();
+            stopDrawing();
+        }
+
+        function setDrawingMode(mode) {
+            currentDrawingMode = mode;
+            document.querySelectorAll('.canvas-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.canvas-btn').classList.add('active');
+            applyDrawingMode();
+        }
+
+        function applyDrawingMode() {
+            if (!ctx) return;
+            
+            switch (currentDrawingMode) {
+                case 'pen':
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.globalAlpha = 1.0;
+                    ctx.strokeStyle = document.getElementById('penColor').value;
+                    ctx.lineWidth = document.getElementById('penSize').value;
+                    break;
+                case 'eraser':
+                    ctx.globalCompositeOperation = 'destination-out';
+                    ctx.lineWidth = 20;
+                    break;
+                case 'highlighter':
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.globalAlpha = 0.3;
+                    ctx.strokeStyle = '#ffff00';
+                    ctx.lineWidth = 15;
+                    break;
+            }
+        }
+
+        function changePenColor() {
+            if (currentDrawingMode === 'pen') applyDrawingMode();
+        }
+
+        function changePenSize() {
+            if (currentDrawingMode === 'pen') applyDrawingMode();
+        }
+
+        function saveDrawingState() {
+            if (!canvas) return;
+            historyIndex++;
+            if (historyIndex < drawingHistory.length) {
+                drawingHistory.splice(historyIndex);
+            }
+            drawingHistory.push(canvas.toDataURL());
+            if (drawingHistory.length > 20) {
+                drawingHistory.shift();
+                historyIndex--;
+            }
+        }
+
+        function undoDrawing() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreDrawingState();
+            }
+        }
+
+        function redoDrawing() {
+            if (historyIndex < drawingHistory.length - 1) {
+                historyIndex++;
+                restoreDrawingState();
+            }
+        }
+
+        function restoreDrawingState() {
+            if (!canvas || !drawingHistory[historyIndex]) return;
+            const img = new Image();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+            };
+            img.src = drawingHistory[historyIndex];
+        }
+
+        function clearCanvas(confirmClear = true) {
+            if (!canvas || !ctx) return;
+            
+            if (!confirmClear || confirm('Clear the entire canvas?')) {
+                const dpr = window.devicePixelRatio || 1;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+                saveDrawingState();
+            }
+        }
+
+        // Drawing and Window Functions
+        function openDrawingWindow() {
+            const drawingWindow = document.getElementById('drawingWindow');
+            drawingWindow.style.display = 'flex';
+            centerWindow('drawingWindow');
+            
+            setTimeout(() => {
+                initializeCanvas();
+            }, 100);
+        }
+
+        function openAIWindow() {
+            document.getElementById('aiWindow').style.display = 'flex';
+            centerWindow('aiWindow');
+        }
+
+        function centerWindow(windowId) {
+            const windowEl = document.getElementById(windowId);
+            const rect = windowEl.getBoundingClientRect();
+            windowEl.style.left = `${Math.max(50, (window.innerWidth - rect.width) / 2)}px`;
+            windowEl.style.top = `${Math.max(50, (window.innerHeight - rect.height) / 2)}px`;
+        }
+
+        // Window Management
+        function closeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+
+        function minimizeWindow(windowId) {
+            const windowEl = document.getElementById(windowId);
+            windowEl.style.display = 'none';
+            
+            const minimizedContainer = document.getElementById('minimizedWindows');
+            const minimizedWindow = document.createElement('div');
+            minimizedWindow.className = 'minimized-window';
+            minimizedWindow.onclick = () => {
+                windowEl.style.display = 'flex';
+                minimizedWindow.remove();
+            };
+            minimizedWindow.textContent = windowEl.querySelector('.window-header span').textContent;
+            minimizedContainer.appendChild(minimizedWindow);
+        }
+
+        function toggleMaximize(windowId) {
+            const windowEl = document.getElementById(windowId);
+            if (windowEl.dataset.isMaximized === 'true') {
+                windowEl.style.width = windowEl.dataset.oldWidth;
+                windowEl.style.height = windowEl.dataset.oldHeight;
+                windowEl.style.left = windowEl.dataset.oldLeft;
+                windowEl.style.top = windowEl.dataset.oldTop;
+                windowEl.dataset.isMaximized = 'false';
+            } else {
+                windowEl.dataset.oldWidth = windowEl.style.width;
+                windowEl.dataset.oldHeight = windowEl.style.height;
+                windowEl.dataset.oldLeft = windowEl.style.left;
+                windowEl.dataset.oldTop = windowEl.style.top;
+                
+                windowEl.style.width = '90vw';
+                windowEl.style.height = '90vh';
+                windowEl.style.left = '5vw';
+                windowEl.style.top = '5vh';
+                windowEl.dataset.isMaximized = 'true';
+            }
+        }
+
+        let dragOffsetX, dragOffsetY, activeWindow;
+        function startDrag(e, windowId) {
+            activeWindow = document.getElementById(windowId);
+            dragOffsetX = e.clientX - activeWindow.offsetLeft;
+            dragOffsetY = e.clientY - activeWindow.offsetTop;
+            document.addEventListener('mousemove', dragWindow);
+            document.addEventListener('mouseup', stopDrag);
+        }
+
+        function dragWindow(e) {
+            if (!activeWindow) return;
+            activeWindow.style.left = (e.clientX - dragOffsetX) + 'px';
+            activeWindow.style.top = (e.clientY - dragOffsetY) + 'px';
+        }
+
+        function stopDrag() {
+            document.removeEventListener('mousemove', dragWindow);
+            document.removeEventListener('mouseup', stopDrag);
+            activeWindow = null;
+        }
+
+        let resizeStartX, resizeStartY, startWidth, startHeight;
+        function startResize(e, windowId) {
+            e.preventDefault();
+            activeWindow = document.getElementById(windowId);
+            resizeStartX = e.clientX;
+            resizeStartY = e.clientY;
+            startWidth = parseInt(document.defaultView.getComputedStyle(activeWindow).width, 10);
+            startHeight = parseInt(document.defaultView.getComputedStyle(activeWindow).height, 10);
+            document.addEventListener('mousemove', resizeWindow);
+            document.addEventListener('mouseup', stopResize);
+        }
+
+        function resizeWindow(e) {
+            if (!activeWindow) return;
+            activeWindow.style.width = (startWidth + e.clientX - resizeStartX) + 'px';
+            activeWindow.style.height = (startHeight + e.clientY - resizeStartY) + 'px';
+        }
+
+        function stopResize() {
+            document.removeEventListener('mousemove', resizeWindow);
+            document.removeEventListener('mouseup', stopResize);
+            activeWindow = null;
+        }
+        
+        // ADD: PDF Viewer Functions
+        function openPdfViewerWindow() {
+            const pdfWindow = document.getElementById('pdfViewerWindow');
+            pdfWindow.style.display = 'flex';
+            centerWindow('pdfViewerWindow');
+            document.getElementById('pdf-upload').addEventListener('change', handlePdfUpload, false);
+        }
+
+        async function handlePdfUpload(e) {
+            const file = e.target.files[0];
+            if (file.type !== "application/pdf") {
+                alert("Please select a PDF file.");
+                return;
+            }
+
+            const fileReader = new FileReader();
+            fileReader.onload = async function() {
+                const typedarray = new Uint8Array(this.result);
+                await renderPdf(typedarray);
+            };
+            fileReader.readAsArrayBuffer(file);
+        }
+
+        async function renderPdf(data) {
+            const pdfViewerContent = document.getElementById('pdf-viewer-content');
+            pdfViewerContent.innerHTML = 'Loading PDF...';
+
+            try {
+                const pdfjsLib = window['pdfjs-dist/build/pdf'];
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
+                const pdf = await pdfjsLib.getDocument({ data }).promise;
+                document.getElementById('pdf-page-info').textContent = `Total pages: ${pdf.numPages}`;
+                pdfViewerContent.innerHTML = '';
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    await page.render(renderContext).promise;
+                    pdfViewerContent.appendChild(canvas);
+                }
+            } catch (error) {
+                console.error("Error rendering PDF:", error);
+                pdfViewerContent.innerHTML = 'Failed to load PDF.';
+            }
+        }
+
+
+        // AI Integration - Hardcoded API Key
+        const GEMINI_API_KEY = 'AIzaSyBlauDhS9sbzQMxCOhXo0kGLousaWAmgB4';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBlauDhS9sbzQMxCOhXo0kGLousaWAmgB4';
+
+        // AI Chat functionality for sidebar
+        function handleAIInput(event) {
+            if (event.key === 'Enter') {
+                sendAIMessage();
+            }
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessageToChat('user', message, 'aiChat');
+            input.value = '';
+            
+            const typingId = addTypingIndicator('aiChat');
+            
+            try {
+                if (message.toLowerCase().includes('analyze notes')) {
+                    await analyzeNotes('aiChat', typingId);
+                } else if (message.toLowerCase().includes('study questions')) {
+                    await generateStudyQuestions('aiChat', typingId);
+                } else if (message.toLowerCase().includes('summarize')) {
+                    await summarizeNotes('aiChat', typingId);
+                } else {
+                    const response = await callGeminiAPI(message);
+                    removeTypingIndicator(typingId);
+                    addMessageToChat('ai', response, 'aiChat');
+                }
+            } catch (error) {
+                removeTypingIndicator(typingId);
+                addMessageToChat('ai', 'Sorry, an error occurred. Please check your connection and try again.', 'aiChat');
+                console.error('AI Error:', error);
+            }
+        }
+
+        // AI Chat functionality for window
+        function handleWindowAIInput(event) {
+            if (event.key === 'Enter') {
+                sendWindowAIMessage();
+            }
+        }
+
+        async function sendWindowAIMessage() {
+            const input = document.getElementById('windowAiInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessageToChat('user', message, 'windowAiChat');
+            input.value = '';
+            
+            const typingId = addTypingIndicator('windowAiChat');
+            
+            try {
+                if (message.toLowerCase().includes('analyze notes')) {
+                    await analyzeNotes('windowAiChat', typingId);
+                } else if (message.toLowerCase().includes('study questions')) {
+                    await generateStudyQuestions('windowAiChat', typingId);
+                } else if (message.toLowerCase().includes('summarize')) {
+                    await summarizeNotes('windowAiChat', typingId);
+                } else {
+                    const response = await callGeminiAPI(message);
+                    removeTypingIndicator(typingId);
+                    addMessageToChat('ai', response, 'windowAiChat');
+                }
+            } catch (error) {
+                removeTypingIndicator(typingId);
+                addMessageToChat('ai', 'Sorry, an error occurred. Please check your connection and try again.', 'windowAiChat');
+                console.error('AI Error:', error);
+            }
+        }
+
+        // Core Gemini API call
+        async function callGeminiAPI(message) {
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: message }] }],
+                    generationConfig: { maxOutputTokens: 1024 }
+                })
+            });
+            if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        function getAllNotesText() {
+            let allText = '';
+            document.querySelectorAll('.page-content').forEach((page, index) => {
+                const content = page.textContent || page.innerText || '';
+                if (content.trim()) {
+                    allText += `Page ${index + 1}: ${content.trim()}\n\n`;
+                }
+            });
+            return allText;
+        }
+
+        async function analyzeNotes(chatId, typingId) {
+            const allText = getAllNotesText();
+            if (!allText.trim()) {
+                removeTypingIndicator(typingId);
+                addMessageToChat('ai', 'There are no notes to analyze.', chatId);
+                return;
+            }
+            const prompt = `Analyze these notes and provide insights:\n\n${allText}`;
+            const response = await callGeminiAPI(prompt);
+            removeTypingIndicator(typingId);
+            addMessageToChat('ai', '📊 **Notes Analysis:**\n\n' + response, chatId);
+        }
+
+        async function generateStudyQuestions(chatId, typingId) {
+            const allText = getAllNotesText();
+            if (!allText.trim()) {
+                removeTypingIndicator(typingId);
+                addMessageToChat('ai', 'I need some notes to generate questions from.', chatId);
+                return;
+            }
+            const prompt = `Based on these notes, generate 5 study questions:\n\n${allText}`;
+            const response = await callGeminiAPI(prompt);
+            removeTypingIndicator(typingId);
+            addMessageToChat('ai', '📚 **Study Questions:**\n\n' + response, chatId);
+        }
+
+        async function summarizeNotes(chatId, typingId) {
+            const allText = getAllNotesText();
+            if (!allText.trim()) {
+                removeTypingIndicator(typingId);
+                addMessageToChat('ai', 'There are no notes to summarize.', chatId);
+                return;
+            }
+            const prompt = `Provide a concise summary of these notes:\n\n${allText}`;
+            const response = await callGeminiAPI(prompt);
+            removeTypingIndicator(typingId);
+            addMessageToChat('ai', '📝 **Notes Summary:**\n\n' + response, chatId);
+        }
+
+        // Helper functions
+        function addMessageToChat(sender, message, chatId) {
+            const chat = document.getElementById(chatId);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerHTML = `<div class="message-content">${formatAIMessage(message)}</div>`;
+            chat.appendChild(messageDiv);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function formatAIMessage(message) {
+            let formatted = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                   .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                                   .replace(/\n/g, '<br>');
+            return formatted;
+        }
+
+        function addTypingIndicator(chatId) {
+            const chat = document.getElementById(chatId);
+            const typingId = 'typing-' + Date.now();
+            const typingDiv = document.createElement('div');
+            typingDiv.id = typingId;
+            typingDiv.className = 'message ai-message typing-indicator';
+            typingDiv.innerHTML = `<div class="message-content"><span class="typing-dots"><span>.</span><span>.</span><span>.</span></span> Thinking...</div>`;
+            chat.appendChild(typingDiv);
+            chat.scrollTop = chat.scrollHeight;
+            return typingId;
+        }
+
+        function removeTypingIndicator(typingId) {
+            const element = document.getElementById(typingId);
+            if (element) element.remove();
+        }
+
+        // Local storage functions
+        function saveToLocalStorage() {
+            const pages = document.querySelectorAll('.page-content');
+            const data = {
+                pageCount: pageCount,
+                pages: Array.from(pages).map((page, index) => ({
+                    content: page.innerHTML,
+                    pageNumber: index + 1
+                }))
+            };
+            localStorage.setItem('padboard-data', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('padboard-data');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    if (data.pages && data.pages.length > 0) {
+                        const container = document.getElementById('pagesContainer');
+                        container.innerHTML = '';
+                        data.pages.forEach((pageData, index) => {
+                            const pageDiv = document.createElement('div');
+                            pageDiv.className = 'page';
+                            pageDiv.setAttribute('data-page', index + 1);
+                            pageDiv.innerHTML = `
+                                <div class="page-content" contenteditable="true" placeholder="Start writing...">${pageData.content}</div>
+                                <div class="page-controls">
+                                    <div class="page-number">Page ${index + 1}</div>
+                                    <button class="btn btn-secondary" onclick="removePage(${index + 1})" style="display: ${data.pages.length > 1 ? 'inline-block' : 'none'};">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </div>`;
+                            container.appendChild(pageDiv);
+                        });
+                        pageCount = data.pages.length;
+                    }
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                const keyMap = { 'b': 'bold', 'i': 'italic', 'u': 'underline' };
+                if (keyMap[e.key]) {
+                    e.preventDefault();
+                    formatText(keyMap[e.key]);
+                }
+                if (e.key === 's') { e.preventDefault(); saveAsPDF(); }
+                if (e.key === 'n') { e.preventDefault(); addNewPage(); }
+                if (e.key === 'd') { e.preventDefault(); openDrawingWindow(); }
+            }
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.floating-window').forEach(w => w.style.display = 'none');
+            }
+        });
+
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('page-content')) {
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(saveToLocalStorage, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
