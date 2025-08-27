@@ -1,0 +1,94 @@
+# Padboard by voxpher - Git Ignore File
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# Temporary Files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# Node.js (if using for development tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Build and Distribution
+dist/
+build/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# API Keys (Security)
+config.js
+secrets.json
+.api-keys
+*.key
+
+# Browser Cache
+.cache/
+
+# Development
+coverage/
+.nyc_output
+.coverage
+
+# Backup Files
+*.backup
+*.bak
+*.old
+
+# Testing
+test-results/
+screenshots/
+
+# Documentation Build
+docs/_build/
+site/
+
+# Python (for local server)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local Development
+.local/
+.server/
+
+# Archive Files
+*.zip
+*.tar.gz
+*.rar
+
+# User Data (if implementing local storage)
+user-data/
+notes-backup/
+exports/
+
+# System Files
+*.pid
+*.seed
+*.pid.lock
